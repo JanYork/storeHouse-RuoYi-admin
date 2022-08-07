@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShTag.mapper.ShTagMapper">
+    
+    <resultMap type="ShTag" id="ShTagResult">
+        <result property="tagId"    column="tag_id"    />
+        <result property="tagName"    column="tag_name"    />
+        <result property="topicCount"    column="topic_count"    />
+        <result property="tagCategoryId"    column="tag_category_id"    />
+    </resultMap>
+
+    <sql id="selectShTagVo">
+        select tag_id, tag_name, topic_count, tag_category_id from tag
+    </sql>
+
+    <select id="selectShTagList" parameterType="ShTag" resultMap="ShTagResult">
+        <include refid="selectShTagVo"/>
+        <where>  
+            <if test="tagName != null  and tagName != ''"> and tag_name like concat('%', #{tagName}, '%')</if>
+            <if test="topicCount != null "> and topic_count = #{topicCount}</if>
+            <if test="tagCategoryId != null "> and tag_category_id = #{tagCategoryId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShTagByTagId" parameterType="Integer" resultMap="ShTagResult">
+        <include refid="selectShTagVo"/>
+        where tag_id = #{tagId}
+    </select>
+        
+    <insert id="insertShTag" parameterType="ShTag" useGeneratedKeys="true" keyProperty="tagId">
+        insert into tag
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tagName != null and tagName != ''">tag_name,</if>
+            <if test="topicCount != null">topic_count,</if>
+            <if test="tagCategoryId != null">tag_category_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tagName != null and tagName != ''">#{tagName},</if>
+            <if test="topicCount != null">#{topicCount},</if>
+            <if test="tagCategoryId != null">#{tagCategoryId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShTag" parameterType="ShTag">
+        update tag
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tagName != null and tagName != ''">tag_name = #{tagName},</if>
+            <if test="topicCount != null">topic_count = #{topicCount},</if>
+            <if test="tagCategoryId != null">tag_category_id = #{tagCategoryId},</if>
+        </trim>
+        where tag_id = #{tagId}
+    </update>
+
+    <delete id="deleteShTagByTagId" parameterType="Integer">
+        delete from tag where tag_id = #{tagId}
+    </delete>
+
+    <delete id="deleteShTagByTagIds" parameterType="String">
+        delete from tag where tag_id in 
+        <foreach item="tagId" collection="array" open="(" separator="," close=")">
+            #{tagId}
+        </foreach>
+    </delete>
+</mapper>

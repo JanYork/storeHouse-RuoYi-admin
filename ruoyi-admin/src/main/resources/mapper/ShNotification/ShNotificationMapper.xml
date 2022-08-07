@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShNotification.mapper.ShNotificationMapper">
+    
+    <resultMap type="ShNotification" id="ShNotificationResult">
+        <result property="nid"    column="nid"    />
+        <result property="notificationUidAction"    column="notification_uid_action"    />
+        <result property="notificationUidSubjectId"    column="notification_uid_subject_id"    />
+        <result property="notificationUid"    column="notification_uid"    />
+        <result property="notificationUidFromUid"    column="notification_uid_from_uid"    />
+        <result property="notificationUidReadAt"    column="notification_uid_read_at"    />
+    </resultMap>
+
+    <sql id="selectShNotificationVo">
+        select nid, notification_uid_action, notification_uid_subject_id, notification_uid, notification_uid_from_uid, notification_uid_read_at from notification
+    </sql>
+
+    <select id="selectShNotificationList" parameterType="ShNotification" resultMap="ShNotificationResult">
+        <include refid="selectShNotificationVo"/>
+        <where>  
+            <if test="notificationUidAction != null  and notificationUidAction != ''"> and notification_uid_action = #{notificationUidAction}</if>
+            <if test="notificationUidSubjectId != null "> and notification_uid_subject_id = #{notificationUidSubjectId}</if>
+            <if test="notificationUid != null "> and notification_uid = #{notificationUid}</if>
+            <if test="notificationUidFromUid != null "> and notification_uid_from_uid = #{notificationUidFromUid}</if>
+            <if test="notificationUidReadAt != null "> and notification_uid_read_at = #{notificationUidReadAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectShNotificationByNid" parameterType="Integer" resultMap="ShNotificationResult">
+        <include refid="selectShNotificationVo"/>
+        where nid = #{nid}
+    </select>
+        
+    <insert id="insertShNotification" parameterType="ShNotification" useGeneratedKeys="true" keyProperty="nid">
+        insert into notification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="notificationUidAction != null and notificationUidAction != ''">notification_uid_action,</if>
+            <if test="notificationUidSubjectId != null">notification_uid_subject_id,</if>
+            <if test="notificationUid != null">notification_uid,</if>
+            <if test="notificationUidFromUid != null">notification_uid_from_uid,</if>
+            <if test="notificationUidReadAt != null">notification_uid_read_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="notificationUidAction != null and notificationUidAction != ''">#{notificationUidAction},</if>
+            <if test="notificationUidSubjectId != null">#{notificationUidSubjectId},</if>
+            <if test="notificationUid != null">#{notificationUid},</if>
+            <if test="notificationUidFromUid != null">#{notificationUidFromUid},</if>
+            <if test="notificationUidReadAt != null">#{notificationUidReadAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShNotification" parameterType="ShNotification">
+        update notification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="notificationUidAction != null and notificationUidAction != ''">notification_uid_action = #{notificationUidAction},</if>
+            <if test="notificationUidSubjectId != null">notification_uid_subject_id = #{notificationUidSubjectId},</if>
+            <if test="notificationUid != null">notification_uid = #{notificationUid},</if>
+            <if test="notificationUidFromUid != null">notification_uid_from_uid = #{notificationUidFromUid},</if>
+            <if test="notificationUidReadAt != null">notification_uid_read_at = #{notificationUidReadAt},</if>
+        </trim>
+        where nid = #{nid}
+    </update>
+
+    <delete id="deleteShNotificationByNid" parameterType="Integer">
+        delete from notification where nid = #{nid}
+    </delete>
+
+    <delete id="deleteShNotificationByNids" parameterType="String">
+        delete from notification where nid in 
+        <foreach item="nid" collection="array" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShTopic.mapper.ShTopicMapper">
+    
+    <resultMap type="ShTopic" id="ShTopicResult">
+        <result property="topicId"    column="topic_id"    />
+        <result property="title"    column="title"    />
+        <result property="topicContent"    column="topic_content"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="topicTime"    column="topic_time"    />
+        <result property="topicUid"    column="topic_uid"    />
+        <result property="topicCategoryId"    column="topic_category_id"    />
+        <result property="topicTagId"    column="topic_tag_id"    />
+        <result property="browseCount"    column="browse_count"    />
+        <result property="thumbsUp"    column="thumbs_up"    />
+    </resultMap>
+
+    <sql id="selectShTopicVo">
+        select topic_id, title, comment_count, topic_time, topic_uid, topic_category_id, topic_tag_id, browse_count, thumbs_up from topic
+    </sql>
+
+    <select id="selectShTopicList" parameterType="ShTopic" resultMap="ShTopicResult">
+        <include refid="selectShTopicVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="topicContent != null  and topicContent != ''"> and topic_content = #{topicContent}</if>
+            <if test="commentCount != null "> and comment_count = #{commentCount}</if>
+            <if test="topicTime != null "> and topic_time = #{topicTime}</if>
+            <if test="topicUid != null "> and topic_uid = #{topicUid}</if>
+            <if test="topicCategoryId != null "> and topic_category_id = #{topicCategoryId}</if>
+            <if test="topicTagId != null "> and topic_tag_id = #{topicTagId}</if>
+            <if test="browseCount != null "> and browse_count = #{browseCount}</if>
+            <if test="thumbsUp != null "> and thumbs_up = #{thumbsUp}</if>
+        </where>
+    </select>
+    
+    <select id="selectShTopicByTopicId" parameterType="Integer" resultMap="ShTopicResult">
+        <include refid="selectShTopicVo"/>
+        where topic_id = #{topicId}
+    </select>
+        
+    <insert id="insertShTopic" parameterType="ShTopic" useGeneratedKeys="true" keyProperty="topicId">
+        insert into topic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="topicContent != null and topicContent != ''">topic_content,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="topicTime != null">topic_time,</if>
+            <if test="topicUid != null">topic_uid,</if>
+            <if test="topicCategoryId != null">topic_category_id,</if>
+            <if test="topicTagId != null">topic_tag_id,</if>
+            <if test="browseCount != null">browse_count,</if>
+            <if test="thumbsUp != null">thumbs_up,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="topicContent != null and topicContent != ''">#{topicContent},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="topicTime != null">#{topicTime},</if>
+            <if test="topicUid != null">#{topicUid},</if>
+            <if test="topicCategoryId != null">#{topicCategoryId},</if>
+            <if test="topicTagId != null">#{topicTagId},</if>
+            <if test="browseCount != null">#{browseCount},</if>
+            <if test="thumbsUp != null">#{thumbsUp},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShTopic" parameterType="ShTopic">
+        update topic
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="topicContent != null and topicContent != ''">topic_content = #{topicContent},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="topicTime != null">topic_time = #{topicTime},</if>
+            <if test="topicUid != null">topic_uid = #{topicUid},</if>
+            <if test="topicCategoryId != null">topic_category_id = #{topicCategoryId},</if>
+            <if test="topicTagId != null">topic_tag_id = #{topicTagId},</if>
+            <if test="browseCount != null">browse_count = #{browseCount},</if>
+            <if test="thumbsUp != null">thumbs_up = #{thumbsUp},</if>
+        </trim>
+        where topic_id = #{topicId}
+    </update>
+
+    <delete id="deleteShTopicByTopicId" parameterType="Integer">
+        delete from topic where topic_id = #{topicId}
+    </delete>
+
+    <delete id="deleteShTopicByTopicIds" parameterType="String">
+        delete from topic where topic_id in 
+        <foreach item="topicId" collection="array" open="(" separator="," close=")">
+            #{topicId}
+        </foreach>
+    </delete>
+</mapper>

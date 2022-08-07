@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.Shuserinfo.mapper.ShuserinfoMapper">
+    
+    <resultMap type="Shuserinfo" id="ShuserinfoResult">
+        <result property="uid"    column="uid"    />
+        <result property="account"    column="account"    />
+        <result property="password"    column="password"    />
+        <result property="telephoneNumber"    column="telephone_number"    />
+        <result property="avatarAddress"    column="avatar_address"    />
+        <result property="eamil"    column="eamil"    />
+        <result property="introduce"    column="introduce"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="topicCount"    column="topic_count"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="nanoId"    column="nano_id"    />
+        <result property="url"    column="url"    />
+        <result property="userState"    column="user_state"    />
+    </resultMap>
+
+    <sql id="selectShuserinfoVo">
+        select uid, account, password, telephone_number, avatar_address, eamil, introduce, create_time, topic_count, comment_count, nano_id, url, user_state from userinfo
+    </sql>
+
+    <select id="selectShuserinfoList" parameterType="Shuserinfo" resultMap="ShuserinfoResult">
+        <include refid="selectShuserinfoVo"/>
+        <where>  
+            <if test="account != null  and account != ''"> and account = #{account}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="telephoneNumber != null  and telephoneNumber != ''"> and telephone_number = #{telephoneNumber}</if>
+            <if test="avatarAddress != null  and avatarAddress != ''"> and avatar_address = #{avatarAddress}</if>
+            <if test="eamil != null  and eamil != ''"> and eamil = #{eamil}</if>
+            <if test="introduce != null  and introduce != ''"> and introduce = #{introduce}</if>
+            <if test="topicCount != null "> and topic_count = #{topicCount}</if>
+            <if test="commentCount != null "> and comment_count = #{commentCount}</if>
+            <if test="nanoId != null  and nanoId != ''"> and nano_id = #{nanoId}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+            <if test="userState != null "> and user_state = #{userState}</if>
+        </where>
+    </select>
+    
+    <select id="selectShuserinfoByUid" parameterType="Integer" resultMap="ShuserinfoResult">
+        <include refid="selectShuserinfoVo"/>
+        where uid = #{uid}
+    </select>
+        
+    <insert id="insertShuserinfo" parameterType="Shuserinfo" useGeneratedKeys="true" keyProperty="uid">
+        insert into userinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="account != null and account != ''">account,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="telephoneNumber != null">telephone_number,</if>
+            <if test="avatarAddress != null">avatar_address,</if>
+            <if test="eamil != null">eamil,</if>
+            <if test="introduce != null">introduce,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="topicCount != null">topic_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="nanoId != null and nanoId != ''">nano_id,</if>
+            <if test="url != null">url,</if>
+            <if test="userState != null">user_state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="account != null and account != ''">#{account},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="telephoneNumber != null">#{telephoneNumber},</if>
+            <if test="avatarAddress != null">#{avatarAddress},</if>
+            <if test="eamil != null">#{eamil},</if>
+            <if test="introduce != null">#{introduce},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="topicCount != null">#{topicCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="nanoId != null and nanoId != ''">#{nanoId},</if>
+            <if test="url != null">#{url},</if>
+            <if test="userState != null">#{userState},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShuserinfo" parameterType="Shuserinfo">
+        update userinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="account != null and account != ''">account = #{account},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="telephoneNumber != null">telephone_number = #{telephoneNumber},</if>
+            <if test="avatarAddress != null">avatar_address = #{avatarAddress},</if>
+            <if test="eamil != null">eamil = #{eamil},</if>
+            <if test="introduce != null">introduce = #{introduce},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="topicCount != null">topic_count = #{topicCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="nanoId != null and nanoId != ''">nano_id = #{nanoId},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="userState != null">user_state = #{userState},</if>
+        </trim>
+        where uid = #{uid}
+    </update>
+
+    <delete id="deleteShuserinfoByUid" parameterType="Integer">
+        delete from userinfo where uid = #{uid}
+    </delete>
+
+    <delete id="deleteShuserinfoByUids" parameterType="String">
+        delete from userinfo where uid in 
+        <foreach item="uid" collection="array" open="(" separator="," close=")">
+            #{uid}
+        </foreach>
+    </delete>
+</mapper>

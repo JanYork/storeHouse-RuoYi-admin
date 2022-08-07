@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShConfig.mapper.ShConfigMapper">
+    
+    <resultMap type="ShConfig" id="ShConfigResult">
+        <result property="cid"    column="cid"    />
+        <result property="smtpEamil"    column="smtp_eamil"    />
+        <result property="smtpPwd"    column="smtp_pwd"    />
+        <result property="baiduAppKey"    column="baidu_app_key"    />
+        <result property="baiduSecretKey"    column="baidu_secret_key"    />
+        <result property="geetestId"    column="geetest_id"    />
+        <result property="geetestKey"    column="geetest_key"    />
+    </resultMap>
+
+    <sql id="selectShConfigVo">
+        select cid, smtp_eamil, smtp_pwd, baidu_app_key, baidu_secret_key, geetest_id, geetest_key from config
+    </sql>
+
+    <select id="selectShConfigList" parameterType="ShConfig" resultMap="ShConfigResult">
+        <include refid="selectShConfigVo"/>
+        <where>  
+            <if test="smtpEamil != null  and smtpEamil != ''"> and smtp_eamil = #{smtpEamil}</if>
+            <if test="smtpPwd != null  and smtpPwd != ''"> and smtp_pwd = #{smtpPwd}</if>
+            <if test="baiduAppKey != null  and baiduAppKey != ''"> and baidu_app_key = #{baiduAppKey}</if>
+            <if test="baiduSecretKey != null  and baiduSecretKey != ''"> and baidu_secret_key = #{baiduSecretKey}</if>
+            <if test="geetestId != null  and geetestId != ''"> and geetest_id = #{geetestId}</if>
+            <if test="geetestKey != null  and geetestKey != ''"> and geetest_key = #{geetestKey}</if>
+        </where>
+    </select>
+    
+    <select id="selectShConfigByCid" parameterType="Integer" resultMap="ShConfigResult">
+        <include refid="selectShConfigVo"/>
+        where cid = #{cid}
+    </select>
+        
+    <insert id="insertShConfig" parameterType="ShConfig" useGeneratedKeys="true" keyProperty="cid">
+        insert into config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="smtpEamil != null and smtpEamil != ''">smtp_eamil,</if>
+            <if test="smtpPwd != null and smtpPwd != ''">smtp_pwd,</if>
+            <if test="baiduAppKey != null">baidu_app_key,</if>
+            <if test="baiduSecretKey != null">baidu_secret_key,</if>
+            <if test="geetestId != null">geetest_id,</if>
+            <if test="geetestKey != null">geetest_key,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="smtpEamil != null and smtpEamil != ''">#{smtpEamil},</if>
+            <if test="smtpPwd != null and smtpPwd != ''">#{smtpPwd},</if>
+            <if test="baiduAppKey != null">#{baiduAppKey},</if>
+            <if test="baiduSecretKey != null">#{baiduSecretKey},</if>
+            <if test="geetestId != null">#{geetestId},</if>
+            <if test="geetestKey != null">#{geetestKey},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShConfig" parameterType="ShConfig">
+        update config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="smtpEamil != null and smtpEamil != ''">smtp_eamil = #{smtpEamil},</if>
+            <if test="smtpPwd != null and smtpPwd != ''">smtp_pwd = #{smtpPwd},</if>
+            <if test="baiduAppKey != null">baidu_app_key = #{baiduAppKey},</if>
+            <if test="baiduSecretKey != null">baidu_secret_key = #{baiduSecretKey},</if>
+            <if test="geetestId != null">geetest_id = #{geetestId},</if>
+            <if test="geetestKey != null">geetest_key = #{geetestKey},</if>
+        </trim>
+        where cid = #{cid}
+    </update>
+
+    <delete id="deleteShConfigByCid" parameterType="Integer">
+        delete from config where cid = #{cid}
+    </delete>
+
+    <delete id="deleteShConfigByCids" parameterType="String">
+        delete from config where cid in 
+        <foreach item="cid" collection="array" open="(" separator="," close=")">
+            #{cid}
+        </foreach>
+    </delete>
+</mapper>

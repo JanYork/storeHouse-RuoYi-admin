@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShThumbs.mapper.ShThumbsMapper">
+    
+    <resultMap type="ShThumbs" id="ShThumbsResult">
+        <result property="thumbsId"    column="thumbs_id"    />
+        <result property="thumbsUid"    column="thumbs_uid"    />
+        <result property="thumbsTopicId"    column="thumbs_topic_id"    />
+    </resultMap>
+
+    <sql id="selectShThumbsVo">
+        select thumbs_id, thumbs_uid, thumbs_topic_id from thumbs
+    </sql>
+
+    <select id="selectShThumbsList" parameterType="ShThumbs" resultMap="ShThumbsResult">
+        <include refid="selectShThumbsVo"/>
+        <where>  
+            <if test="thumbsUid != null "> and thumbs_uid = #{thumbsUid}</if>
+            <if test="thumbsTopicId != null "> and thumbs_topic_id = #{thumbsTopicId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShThumbsByThumbsId" parameterType="Integer" resultMap="ShThumbsResult">
+        <include refid="selectShThumbsVo"/>
+        where thumbs_id = #{thumbsId}
+    </select>
+        
+    <insert id="insertShThumbs" parameterType="ShThumbs" useGeneratedKeys="true" keyProperty="thumbsId">
+        insert into thumbs
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="thumbsUid != null">thumbs_uid,</if>
+            <if test="thumbsTopicId != null">thumbs_topic_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="thumbsUid != null">#{thumbsUid},</if>
+            <if test="thumbsTopicId != null">#{thumbsTopicId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShThumbs" parameterType="ShThumbs">
+        update thumbs
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="thumbsUid != null">thumbs_uid = #{thumbsUid},</if>
+            <if test="thumbsTopicId != null">thumbs_topic_id = #{thumbsTopicId},</if>
+        </trim>
+        where thumbs_id = #{thumbsId}
+    </update>
+
+    <delete id="deleteShThumbsByThumbsId" parameterType="Integer">
+        delete from thumbs where thumbs_id = #{thumbsId}
+    </delete>
+
+    <delete id="deleteShThumbsByThumbsIds" parameterType="String">
+        delete from thumbs where thumbs_id in 
+        <foreach item="thumbsId" collection="array" open="(" separator="," close=")">
+            #{thumbsId}
+        </foreach>
+    </delete>
+</mapper>

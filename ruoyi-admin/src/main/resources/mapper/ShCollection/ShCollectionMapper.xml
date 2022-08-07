@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShCollection.mapper.ShCollectionMapper">
+    
+    <resultMap type="ShCollection" id="ShCollectionResult">
+        <result property="collectionId"    column="collection_id"    />
+        <result property="collectionUid"    column="collection_uid"    />
+        <result property="collectionTopicId"    column="collection_topic_id"    />
+    </resultMap>
+
+    <sql id="selectShCollectionVo">
+        select collection_id, collection_uid, collection_topic_id from collection
+    </sql>
+
+    <select id="selectShCollectionList" parameterType="ShCollection" resultMap="ShCollectionResult">
+        <include refid="selectShCollectionVo"/>
+        <where>  
+            <if test="collectionUid != null "> and collection_uid = #{collectionUid}</if>
+            <if test="collectionTopicId != null "> and collection_topic_id = #{collectionTopicId}</if>
+        </where>
+    </select>
+    
+    <select id="selectShCollectionByCollectionId" parameterType="Integer" resultMap="ShCollectionResult">
+        <include refid="selectShCollectionVo"/>
+        where collection_id = #{collectionId}
+    </select>
+        
+    <insert id="insertShCollection" parameterType="ShCollection" useGeneratedKeys="true" keyProperty="collectionId">
+        insert into collection
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="collectionUid != null">collection_uid,</if>
+            <if test="collectionTopicId != null">collection_topic_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="collectionUid != null">#{collectionUid},</if>
+            <if test="collectionTopicId != null">#{collectionTopicId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShCollection" parameterType="ShCollection">
+        update collection
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="collectionUid != null">collection_uid = #{collectionUid},</if>
+            <if test="collectionTopicId != null">collection_topic_id = #{collectionTopicId},</if>
+        </trim>
+        where collection_id = #{collectionId}
+    </update>
+
+    <delete id="deleteShCollectionByCollectionId" parameterType="Integer">
+        delete from collection where collection_id = #{collectionId}
+    </delete>
+
+    <delete id="deleteShCollectionByCollectionIds" parameterType="String">
+        delete from collection where collection_id in 
+        <foreach item="collectionId" collection="array" open="(" separator="," close=")">
+            #{collectionId}
+        </foreach>
+    </delete>
+</mapper>

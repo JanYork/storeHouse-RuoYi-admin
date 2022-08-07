@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShComment.mapper.ShCommentMapper">
+    
+    <resultMap type="ShComment" id="ShCommentResult">
+        <result property="commentId"    column="comment_id"    />
+        <result property="content"    column="content"    />
+        <result property="commentUid"    column="comment_uid"    />
+        <result property="commentTopicId"    column="comment_topic_id"    />
+        <result property="commentTime"    column="comment_time"    />
+        <result property="commentIp"    column="comment_ip"    />
+        <result property="commentEquipment"    column="comment_equipment"    />
+    </resultMap>
+
+    <sql id="selectShCommentVo">
+        select comment_id, content, comment_uid, comment_topic_id, comment_time, comment_ip, comment_equipment from comment
+    </sql>
+
+    <select id="selectShCommentList" parameterType="ShComment" resultMap="ShCommentResult">
+        <include refid="selectShCommentVo"/>
+        <where>  
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="commentUid != null "> and comment_uid = #{commentUid}</if>
+            <if test="commentTopicId != null "> and comment_topic_id = #{commentTopicId}</if>
+            <if test="commentTime != null "> and comment_time = #{commentTime}</if>
+            <if test="commentIp != null  and commentIp != ''"> and comment_ip = #{commentIp}</if>
+            <if test="commentEquipment != null  and commentEquipment != ''"> and comment_equipment = #{commentEquipment}</if>
+        </where>
+    </select>
+    
+    <select id="selectShCommentByCommentId" parameterType="Integer" resultMap="ShCommentResult">
+        <include refid="selectShCommentVo"/>
+        where comment_id = #{commentId}
+    </select>
+        
+    <insert id="insertShComment" parameterType="ShComment" useGeneratedKeys="true" keyProperty="commentId">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null and content != ''">content,</if>
+            <if test="commentUid != null">comment_uid,</if>
+            <if test="commentTopicId != null">comment_topic_id,</if>
+            <if test="commentTime != null">comment_time,</if>
+            <if test="commentIp != null">comment_ip,</if>
+            <if test="commentEquipment != null">comment_equipment,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="commentUid != null">#{commentUid},</if>
+            <if test="commentTopicId != null">#{commentTopicId},</if>
+            <if test="commentTime != null">#{commentTime},</if>
+            <if test="commentIp != null">#{commentIp},</if>
+            <if test="commentEquipment != null">#{commentEquipment},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShComment" parameterType="ShComment">
+        update comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="commentUid != null">comment_uid = #{commentUid},</if>
+            <if test="commentTopicId != null">comment_topic_id = #{commentTopicId},</if>
+            <if test="commentTime != null">comment_time = #{commentTime},</if>
+            <if test="commentIp != null">comment_ip = #{commentIp},</if>
+            <if test="commentEquipment != null">comment_equipment = #{commentEquipment},</if>
+        </trim>
+        where comment_id = #{commentId}
+    </update>
+
+    <delete id="deleteShCommentByCommentId" parameterType="Integer">
+        delete from comment where comment_id = #{commentId}
+    </delete>
+
+    <delete id="deleteShCommentByCommentIds" parameterType="String">
+        delete from comment where comment_id in 
+        <foreach item="commentId" collection="array" open="(" separator="," close=")">
+            #{commentId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ShCategory.mapper.ShCategoryMapper">
+    
+    <resultMap type="ShCategory" id="ShCategoryResult">
+        <result property="categoryId"    column="category_id"    />
+        <result property="categoryTitle"    column="category_title"    />
+        <result property="topicCount"    column="topic_count"    />
+        <result property="commentCount"    column="comment_count"    />
+        <result property="description"    column="description"    />
+        <result property="categoryLogo"    column="category_logo"    />
+    </resultMap>
+
+    <sql id="selectShCategoryVo">
+        select category_id, category_title, topic_count, comment_count, description, category_logo from category
+    </sql>
+
+    <select id="selectShCategoryList" parameterType="ShCategory" resultMap="ShCategoryResult">
+        <include refid="selectShCategoryVo"/>
+        <where>  
+            <if test="categoryTitle != null  and categoryTitle != ''"> and category_title = #{categoryTitle}</if>
+            <if test="topicCount != null "> and topic_count = #{topicCount}</if>
+            <if test="commentCount != null "> and comment_count = #{commentCount}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="categoryLogo != null  and categoryLogo != ''"> and category_logo = #{categoryLogo}</if>
+        </where>
+    </select>
+    
+    <select id="selectShCategoryByCategoryId" parameterType="Integer" resultMap="ShCategoryResult">
+        <include refid="selectShCategoryVo"/>
+        where category_id = #{categoryId}
+    </select>
+        
+    <insert id="insertShCategory" parameterType="ShCategory" useGeneratedKeys="true" keyProperty="categoryId">
+        insert into category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="categoryTitle != null and categoryTitle != ''">category_title,</if>
+            <if test="topicCount != null">topic_count,</if>
+            <if test="commentCount != null">comment_count,</if>
+            <if test="description != null and description != ''">description,</if>
+            <if test="categoryLogo != null and categoryLogo != ''">category_logo,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="categoryTitle != null and categoryTitle != ''">#{categoryTitle},</if>
+            <if test="topicCount != null">#{topicCount},</if>
+            <if test="commentCount != null">#{commentCount},</if>
+            <if test="description != null and description != ''">#{description},</if>
+            <if test="categoryLogo != null and categoryLogo != ''">#{categoryLogo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShCategory" parameterType="ShCategory">
+        update category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="categoryTitle != null and categoryTitle != ''">category_title = #{categoryTitle},</if>
+            <if test="topicCount != null">topic_count = #{topicCount},</if>
+            <if test="commentCount != null">comment_count = #{commentCount},</if>
+            <if test="description != null and description != ''">description = #{description},</if>
+            <if test="categoryLogo != null and categoryLogo != ''">category_logo = #{categoryLogo},</if>
+        </trim>
+        where category_id = #{categoryId}
+    </update>
+
+    <delete id="deleteShCategoryByCategoryId" parameterType="Integer">
+        delete from category where category_id = #{categoryId}
+    </delete>
+
+    <delete id="deleteShCategoryByCategoryIds" parameterType="String">
+        delete from category where category_id in 
+        <foreach item="categoryId" collection="array" open="(" separator="," close=")">
+            #{categoryId}
+        </foreach>
+    </delete>
+</mapper>
