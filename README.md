@@ -1,3 +1,7 @@
+## 说明
+残缺项目，暂不描述，因为有些工具类和封装类不想丢，放仓库保留，页面也就懒得展示了。
+以下为RuoYi文档。
+
 <p align="center">
 	<img alt="logo" src="https://oscimg.oschina.net/oscnet/up-d3d0a9303e11d522a06cd263f3079027715.png">
 </p>
